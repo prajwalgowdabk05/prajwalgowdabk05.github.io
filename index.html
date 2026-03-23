@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Clash+Display:wght@400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --night:#07080C;
+  --card:#0F1117;
+  --card2:#161820;
+  --line:#9b9fb7;
+  --dim:#4A4F6A;
+  --soft:#b6bed5;
+  --text:#edeff6;
+  --white:#E6F1FF;
+  --green:#64FFDA;
+  --purple:#BD93F9;
+  --pink:#FF79C6;
+  --orange:#FFB86C;
+  --red:#FF5555;
+  --blue:#8BE9FD;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Space Grotesk',sans-serif;background:var(--night);color:var(--text);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.4;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--night)}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;width:100%;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.1rem 4rem;
+  background:rgba(7,8,12,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+}
+.logo{
+  font-family:'Fira Code',monospace;font-size:0.9rem;
+  color:var(--green);letter-spacing:1px;
+}
+.logo a{color:var(--soft)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  font-family:'Fira Code',monospace;font-size:0.75rem;
+  color:var(--soft);letter-spacing:1px;
+  transition:color 0.2s;
+  counter-increment:nav-item;
+}
+.nav-links a::before{
+  color:var(--green);margin-right:5px;font-size:0.65rem;
+}
+.nav-links li:nth-child(1) a::before{content:'01.'}
+.nav-links li:nth-child(2) a::before{content:'02.'}
+.nav-links li:nth-child(3) a::before{content:'03.'}
+.nav-links li:nth-child(4) a::before{content:'04.'}
+.nav-links a:hover{color:var(--green)}
+.nav-resume{
+  font-family:'Fira Code',monospace;font-size:0.72rem;
+  color:var(--green);border:1px solid var(--green);
+  padding:8px 18px;border-radius:4px;
+  transition:all 0.2s;letter-spacing:1px;
+}
+.nav-resume:hover{background:rgba(100,255,218,0.08)}
+
+/* ─── HERO ─── */
+#hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:0 4rem;
+  position:relative;overflow:hidden;
+}
+.hero-inner{margin-left: 150px;max-width:1200px;position:relative;z-index:1}
+.hero-pre{
+  font-family:'Fira Code',monospace;font-size:0.9rem;
+  color:var(--green);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:10px;
+  animation:fadeUp 0.6s 0.2s both;
+}
+.hero-pre::after{content:'';flex:1;max-width:80px;height:1px;background:var(--green);opacity:0.4}
+.hero-h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(3.5rem,7vw,6.5rem);
+  font-weight:700;line-height:1;
+  color:var(--white);letter-spacing:-3px;
+  margin-bottom:0.15em;
+  animation:fadeUp 0.6s 0.35s both;
+}
+.hero-h1 .name-accent{
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-h2{
+  font-size:clamp(2rem,4.5vw,4rem);
+  font-weight:700;line-height:1;
+  color:var(--dim);letter-spacing:-2px;
+  margin-bottom:2rem;
+  animation:fadeUp 0.6s 0.45s both;
+}
+.hero-desc{
+  font-size:1.05rem;line-height:1.85;
+  color:var(--soft);max-width:560px;
+  margin-bottom:2.5rem;
+  animation:fadeUp 0.6s 0.55s both;
+}
+.hero-desc strong{color:var(--green);font-weight:500}
+.hero-btns{
+  display:flex;gap:1.2rem;flex-wrap:wrap;
+  animation:fadeUp 0.6s 0.65s both;
+}
+.btn-main{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Fira Code',monospace;font-size:0.82rem;
+  letter-spacing:1px;padding:15px 32px;border-radius:6px;
+  background:transparent;border:1.5px solid var(--green);
+  color:var(--green);transition:all 0.25s;cursor:pointer;
+}
+.btn-main:hover{background:rgba(100,255,218,0.1);transform:translateY(-3px);box-shadow:0 10px 30px rgba(100,255,218,0.1)}
+.btn-main.filled{background:var(--green);color:var(--night);border-color:var(--green)}
+.btn-main.filled:hover{background:#4DDDBB;transform:translateY(-3px)}
+
+/* hero bg blobs */
+.blob{
+  position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
+}
+.blob-1{width:500px;height:500px;background:rgba(100,255,218,0.04);top:-100px;right:-100px}
+.blob-2{width:400px;height:400px;background:rgba(189,147,249,0.04);bottom:-50px;right:200px}
+
+/* hero scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:4rem;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-family:'Fira Code',monospace;font-size:0.65rem;
+  color:var(--dim);letter-spacing:2px;
+  animation:fadeUp 0.6s 1s both;
+}
+.scroll-line{
+  width:1px;height:60px;background:linear-gradient(var(--green),transparent);
+  animation:scrollLine 2s infinite;
+}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* sidebar social */
+.sidebar{
+  position:fixed;left:2rem;bottom:0;z-index:100;
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+}
+.sidebar::after{content:'';width:1px;height:90px;background:var(--dim)}
+.sidebar-link{
+  font-family:'Fira Code',monospace;font-size:0.7rem;
+  color:var(--dim);letter-spacing:2px;
+  writing-mode:vertical-rl;transition:all 0.2s;
+}
+.sidebar-link:hover{color:var(--green);transform:translateY(-4px)}
+
+/* ─── SECTION COMMON ─── */
+.section{padding:6rem 4rem;max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.sec-heading{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:3.5rem;
+}
+.sec-num{
+  font-family:'Fira Code',monospace;font-size:1rem;
+  color:var(--green);
+}
+.sec-title{
+  font-size:clamp(1.5rem,2.5vw,1.8rem);
+  font-weight:700;color:var(--white);
+  letter-spacing:-0.5px;white-space:nowrap;
+}
+.sec-line{flex:1;height:1px;background:var(--line);max-width:300px}
+
+/* ─── ABOUT ─── */
+.about-grid{display:grid;grid-template-columns:3fr 2fr;gap:4rem;align-items:start}
+.about-text p{
+  font-size:0.97rem;line-height:1.9;color:var(--soft);
+  margin-bottom:1.2rem;
+}
+.about-text p strong{color:var(--green);font-weight:500}
+.tech-list{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;
+  margin-top:1.5rem;list-style:none;
+}
+.tech-list li{
+  font-family:'Fira Code',monospace;font-size:0.78rem;
+  color:var(--soft);
+  display:flex;align-items:center;gap:8px;
+}
+.tech-list li::before{content:'▹';color:var(--green);font-size:0.75rem}
+
+.about-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:1.8rem;
+  position:relative;overflow:hidden;
+}
+.about-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--blue),var(--purple));
+}
+.card-pic{
+  width:100%;aspect-ratio:1;border-radius:8px;
+  background:linear-gradient(135deg,rgba(100,255,218,0.1),rgba(189,147,249,0.1));
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.2rem;font-size:4rem;
+}
+.card-info-row{
+  display:flex;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--line);
+  font-size:0.82rem;
+}
+.card-info-row:last-child{border-bottom:none}
+.card-info-row span:first-child{color:var(--dim);font-family:'Fira Code',monospace;font-size:0.75rem}
+.card-info-row span:last-child{color:var(--text);font-weight:500}
+.avail-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(100,255,218,0.08);border:1px solid rgba(100,255,218,0.2);
+  border-radius:30px;padding:6px 14px;margin-top:1rem;
+  font-family:'Fira Code',monospace;font-size:0.7rem;color:var(--green);
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ─── EXPERIENCE ─── */
+.exp-tabs{display:flex;gap:0}
+.exp-layout{display:grid;grid-template-columns:180px 1fr;gap:0}
+.exp-tab-list{
+  border-right:2px solid var(--line);
+  display:flex;flex-direction:column;
+}
+.exp-tab{
+  font-family:'Fira Code',monospace;font-size:0.78rem;
+  color:var(--dim);padding:14px 20px;
+  cursor:pointer;border-left:2px solid transparent;
+  margin-left:-2px;transition:all 0.2s;
+  white-space:nowrap;
+}
+.exp-tab.active{color:var(--green);border-left-color:var(--green);background:rgba(100,255,218,0.05)}
+.exp-tab:hover{color:var(--green);background:rgba(100,255,218,0.03)}
+.exp-panels{padding-left:2.5rem}
+.exp-panel{display:none}
+.exp-panel.active{display:block}
+.exp-panel h3{
+  font-size:1.15rem;font-weight:600;color:var(--white);
+  margin-bottom:4px;
+}
+.exp-panel h3 span{color:var(--green)}
+.exp-panel{
+  font-family:'Fira Code',monospace;font-size:0.75rem;
+  color:var(--dim);margin-bottom:1.5rem;
+}
+.exp-meta{
+  font-family:'Fira Code',monospace;font-size:0.95rem;
+  color:red;margin-bottom:1.5rem;
+}
+.exp-panel ul{list-style:none;display:flex;flex-direction:column;gap:0.75rem}
+.exp-panel li{
+  font-size:0.92rem;line-height:1.75;color:var(--soft);
+  padding-left:1.5rem;position:relative;
+}
+.exp-panel li::before{
+  content:'▹';position:absolute;left:0;color:var(--green);top:1px;
+}
+
+/* ─── PROJECTS ─── */
+.proj-featured{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+  margin-bottom:0;
+}
+.proj-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:2rem;
+  position:relative;overflow:hidden;
+  transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;
+  cursor:default;
+}
+.proj-card::after{
+  content:'';position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(100,255,218,0.03),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.proj-card:hover{transform:translateY(-8px);border-color:rgba(100,255,218,0.25);box-shadow:0 20px 50px rgba(0,0,0,0.5)}
+.proj-card:hover::after{opacity:1}
+.proj-top{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:1.5rem;
+}
+.proj-folder{font-size:2rem;color:var(--green)}
+.proj-links{display:flex;gap:14px}
+.proj-links a{color:var(--dim);font-size:1.1rem;transition:color 0.2s}
+.proj-links a:hover{color:var(--green)}
+.proj-name{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:0.7rem}
+.proj-desc{font-size:0.85rem;line-height:1.75;color:var(--soft);margin-bottom:1.5rem}
+.proj-tech{display:flex;flex-wrap:wrap;gap:8px}
+.tech-chip{
+  font-family:'Fira Code',monospace;font-size:0.65rem;
+  color:var(--green);background:rgba(100,255,218,0.07);
+  padding:4px 10px;border-radius:4px;border:1px solid rgba(100,255,218,0.15);
+}
+
+/* ─── SKILLS ─── */
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.skill-group{margin-bottom:2rem}
+.skill-group-title{
+  font-family:'Fira Code',monospace;font-size:0.72rem;
+  color:var(--green);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:1.2rem;display:flex;align-items:center;gap:10px;
+}
+.skill-group-title::after{content:'';flex:1;height:1px;background:var(--line)}
+.skill-row{margin-bottom:1rem}
+.skill-meta{display:flex;justify-content:space-between;margin-bottom:6px}
+.skill-name{font-size:0.85rem;font-weight:500;color:var(--text)}
+.skill-pct{font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--green)}
+.skill-bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.skill-fill{height:100%;border-radius:2px;width:0;transition:width 1.5s cubic-bezier(0.25,0.46,0.45,0.94)}
+
+.tools-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:0.5rem}
+.tool-badge{
+  font-family:'Fira Code',monospace;font-size:0.72rem;
+  color:var(--soft);border:1px solid var(--line);
+  padding:6px 14px;border-radius:6px;
+  transition:all 0.2s;cursor:default;
+}
+.tool-badge:hover{border-color:var(--purple);color:var(--purple);background:rgba(189,147,249,0.06)}
+
+/* ─── CONTACT ─── */
+.contact-wrap{
+  text-align:center;max-width:600px;margin:0 auto;
+}
+.contact-num{
+  font-family:'Fira Code',monospace;font-size:0.82rem;
+  color:var(--green);margin-bottom:1.5rem;display:block;
+}
+.contact-heading{
+  font-size:clamp(2.5rem,5vw,4rem);font-weight:700;
+  color:var(--white);letter-spacing:-2px;line-height:1.1;
+  margin-bottom:1.2rem;
+}
+.contact-sub{
+  font-size:0.97rem;line-height:1.85;color:var(--soft);
+  margin-bottom:2.5rem;
+}
+.contact-email-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Fira Code',monospace;font-size:0.85rem;
+  color:var(--green);border:1.5px solid var(--green);
+  padding:18px 40px;border-radius:6px;
+  transition:all 0.25s;letter-spacing:1px;
+}
+.contact-email-btn:hover{background:rgba(100,255,218,0.1);transform:translateY(-3px);box-shadow:0 10px 30px rgba(100,255,218,0.1)}
+.contact-socials{
+  display:flex;justify-content:center;gap:2rem;
+  margin-top:3rem;padding-top:3rem;
+  border-top:1px solid var(--line);
+}
+.contact-socials a{
+  font-family:'Fira Code',monospace;font-size:0.75rem;
+  color:var(--dim);transition:all 0.2s;
+  display:flex;align-items:center;gap:8px;
+}
+.contact-socials a:hover{color:var(--green);transform:translateY(-3px)}
+
+/* ─── FOOTER ─── */
+footer{
+  text-align:center;padding:2rem;
+  font-family:'Fira Code',monospace;font-size:0.68rem;
+  color:var(--dim);border-top:1px solid var(--line);
+  position:relative;z-index:1;
+}
+footer span{color:var(--green)}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.65s,transform 0.65s}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+@media(max-width:800px){
+  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  #hero,.section{padding-left:1.5rem;padding-right:1.5rem}
+  .hero-h1{letter-spacing:-1px}.about-grid,.exp-layout,.proj-featured,.skills-layout{grid-template-columns:1fr}
+  .exp-tab-list{flex-direction:row;border-right:none;border-bottom:2px solid var(--line);overflow-x:auto}
+  .exp-tab{border-left:none;border-bottom:2px solid transparent;margin-left:0;margin-bottom:-2px}
+  .exp-tab.active{border-left-color:transparent;border-bottom-color:var(--green)}
+  .exp-panels{padding-left:0;padding-top:2rem}
+  .sidebar{display:none}
+  .scroll-hint{left:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">&lt;<a href="#hero">prajwal</a> /&gt;</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+  </ul>
+  <a href="#contact" class="nav-resume">Contact</a>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a class="sidebar-link" href="https://linkedin.com/in/prajwal-gowda-b-k4447" target="_blank">LinkedIn</a>
+  <a class="sidebar-link" href="mailto:prajwalgowdabk01@gmail.com">Email</a>
+  <a class="sidebar-link" href="tel:9844479650">Phone</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="hero-inner">
+    <div class="hero-pre">Hi, my name is</div>
+    <h1 class="hero-h1"><span class="name-accent">Prajwal Gowda B K</span></h1>
+    <h2 class="hero-h2">I build things for the web.</h2>
+    <p class="hero-desc">
+      I'm a <strong>Java Full Stack Developer</strong> based in Bangalore, specializing in building scalable web applications with <strong>Spring Boot</strong> and <strong>React.js</strong>. Currently honing my craft at Pentagon Space — open to exciting full-time opportunities.
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-main filled">View My Work →</a>
+      <a href="#contact" class="btn-main">Get In Touch</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    SCROLL
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="section reveal" id="about">
+  <div class="sec-heading">
+    <span class="sec-num">01.</span>
+    <span class="sec-title">About Me</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Hey! I'm Prajwal — a <strong>Computer Science Engineering graduate</strong> (CGPA 8.2) with a deep passion for backend engineering and full stack development. I love architecting systems that are clean, fast, and maintainable.</p>
+      <p>My journey started with HTML & CSS at Technofly Solution, and today I'm building <strong>production-grade RESTful APIs</strong>, implementing <strong>JWT-based security</strong>, and working with <strong>Microservices architecture.</strong> 
+        <!-- at Pentagon Space. -->
+      </p>
+      <p>When I'm not writing code, I'm exploring new technologies, solving DSA problems, or video editing — yes, I'm that developer who cares about aesthetics too.</p>
+      <p>Here are some technologies I've been working with:</p>
+      <ul class="tech-list">
+        <li>Java</li><li>Spring Boot</li>
+        <li>Spring Security</li><li>React.js</li>
+        <li>MySQL & Hibernate</li><li>REST APIs</li>
+        <li>Microservices</li><li>Git & GitHub</li>
+      </ul>
+    </div>
+    <div class="about-card">
+      <!-- <div class="card-pic">👨‍💻</div> -->
+       <img src="photo.jpeg" style="width:80px;height:80px;border-radius:14px;object-fit:cover;object-position:top;margin-bottom:1.2rem;" alt="Prajwal">
+      <div class="card-info-row"><span>Role</span><span>Full Stack Dev</span></div>
+      <div class="card-info-row"><span>Stack</span><span>Java · Spring · React</span></div>
+      <div class="card-info-row"><span>CGPA</span><span>8.2 / 10</span></div>
+      <div class="card-info-row"><span>Location</span><span>Bangalore, KA</span></div>
+      <div class="card-info-row"><span>Degree</span><span>B.E. CSE (2021–25)</span></div>
+      <div style="text-align:center">
+        <div class="avail-badge"><span class="dot"></span>Available for opportunities</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="section reveal" id="experience">
+  <div class="sec-heading">
+    <span class="sec-num">02.</span>
+    <span class="sec-title">Where I've Worked</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="exp-layout">
+    <div class="exp-tab-list">
+      <div class="exp-tab active" onclick="showTab(0)">Developer Trainee</div>
+      <div class="exp-tab" onclick="showTab(1)">Technofly</div>
+    </div>
+    <div class="exp-panels">
+      <div class="exp-panel active">
+        <h3>Java Full Stack Trainee 
+          <!-- <span>@ Pentagon Space</span> -->
+        </h3>
+        <p class="exp-meta">June 2025 – Present</p>
+        <ul>
+          <li>Building end-to-end Java Full Stack applications using Spring Boot, Spring MVC, Spring Data JPA, and Spring Security with clean layered architecture.</li>
+          <li>Developed RESTful APIs following Controller → Service → Repository pattern; integrated MySQL via Hibernate ORM for transaction management.</li>
+          <li>Implemented JWT-based authentication and role-level authorization using Spring Security.</li>
+          <li>Built dynamic, responsive React.js frontends with JavaScript, HTML5, and CSS3 — integrated with backend APIs for seamless data flow.</li>
+          <li>Explored Microservices architecture including service decomposition, inter-service communication, and API Gateway fundamentals.</li>
+        </ul>
+      </div>
+      <div class="exp-panel">
+        <h3>Technology Intern <span>@ Technofly Solution</span></h3>
+        <p class="exp-meta">3 Months</p>
+        <ul>
+          <li>Developed responsive, modern web pages using HTML5 and CSS3 following industry UI design practices.</li>
+          <li>Built foundational knowledge of web application structure, component styling, and frontend development principles.</li>
+          <li>Collaborated with the team to deliver polished frontend interfaces for client projects.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="section reveal" id="projects">
+  <div class="sec-heading">
+    <span class="sec-num">03.</span>
+    <span class="sec-title">Things I've Built</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="proj-featured">
+    <div class="proj-card">
+      <div class="proj-top">
+        <span class="proj-folder">⬡</span>
+        <div class="proj-links">
+          <a href="#" title="GitHub">⌥</a>
+          <a href="#" title="Live">↗</a>
+        </div>
+      </div>
+      <div class="proj-name">Event Management System</div>
+      <div class="proj-desc">Full stack event management platform with Spring Boot monolithic backend and React.js frontend. Includes complete JWT auth flow, role-based access control, Swagger-tested CRUD APIs, and MySQL persistence via Hibernate ORM.</div>
+      <div class="proj-tech">
+        <span class="tech-chip">Spring Boot</span>
+        <span class="tech-chip">React.js</span>
+        <span class="tech-chip">JWT</span>
+        <span class="tech-chip">Spring Security</span>
+        <span class="tech-chip">MySQL</span>
+        <span class="tech-chip">Swagger UI</span>
+      </div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-top">
+        <span class="proj-folder" style="color:var(--purple)">⬡</span>
+        <div class="proj-links">
+          <a href="#" title="GitHub">⌥</a>
+          <a href="#" title="Live">↗</a>
+        </div>
+      </div>
+      <div class="proj-name">E-Commerce Application</div>
+      <div class="proj-desc">Microservices-based e-commerce backend with service-oriented architecture, API Gateway routing, and inter-service REST communication. React.js frontend handles product browsing and user operations with seamless API integration.</div>
+      <div class="proj-tech">
+        <span class="tech-chip" style="color:var(--purple);background:rgba(189,147,249,0.07);border-color:rgba(189,147,249,0.15)">Microservices</span>
+        <span class="tech-chip" style="color:var(--purple);background:rgba(189,147,249,0.07);border-color:rgba(189,147,249,0.15)">API Gateway</span>
+        <span class="tech-chip" style="color:var(--purple);background:rgba(189,147,249,0.07);border-color:rgba(189,147,249,0.15)">Spring Boot</span>
+        <span class="tech-chip" style="color:var(--purple);background:rgba(189,147,249,0.07);border-color:rgba(189,147,249,0.15)">React.js</span>
+        <span class="tech-chip" style="color:var(--purple);background:rgba(189,147,249,0.07);border-color:rgba(189,147,249,0.15)">MySQL</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="section reveal" id="skills">
+  <div class="sec-heading">
+    <span class="sec-num">04.</span>
+    <span class="sec-title">Skills & Tools</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="skills-layout">
+    <div>
+      <div class="skill-group">
+        <div class="skill-group-title">Backend</div>
+        <div id="skills-back"></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Frontend</div>
+        <div id="skills-front"></div>
+      </div>
+    </div>
+    <div>
+      <div class="skill-group">
+        <div class="skill-group-title">Core & Architecture</div>
+        <div id="skills-core"></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools & Platforms</div>
+        <div class="tools-grid" id="tools-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="section reveal" id="contact">
+  <div class="contact-wrap">
+    <span class="contact-num">05. what's next?</span>
+    <h2 class="contact-heading">Get In Touch</h2>
+    <p class="contact-sub">I'm actively looking for full-time Software Engineer roles. Whether you have a question, an opportunity, or just want to say hi — my inbox is always open. I'll do my best to get back to you!</p>
+    <a href="mailto:prajwalgowdabk01@gmail.com" class="contact-email-btn">✉ Say Hello</a>
+    <div class="contact-socials">
+      <a href="https://linkedin.com/in/prajwal-gowda-b-k4447" target="_blank">↗ LinkedIn</a>
+      <a href="tel:9844479650">☎ +91 98444 79650</a>
+      <a href="mailto:prajwalgowdabk01@gmail.com">✉ Gmail</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Designed & Built by <span>Prajwal Gowda B K</span>
+</footer>
+
+<script>
+// Tab switcher
+function showTab(i){
+  document.querySelectorAll('.exp-tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  document.querySelectorAll('.exp-panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
+}
+
+// Skills data
+const backSkills=[{n:'Java',p:88},{n:'Spring Boot',p:85},{n:'Spring Security',p:78},{n:'Spring Data JPA',p:82}];
+const frontSkills=[{n:'React.js',p:80},{n:'JavaScript',p:78},{n:'HTML5 / CSS3',p:85}];
+const coreSkills=[{n:'REST API Design',p:88},{n:'Microservices',p:70},{n:'MySQL & ORM',p:82},{n:'DSA & OOP',p:80}];
+const tools=['Git','GitHub','Eclipse','VS Code','Apache Tomcat','Swagger UI','Postman','JDBC'];
+
+const colors={back:'#64FFDA',front:'#8BE9FD',core:'#BD93F9'};
+
+function renderSkills(id,arr,color){
+  const el=document.getElementById(id);
+  arr.forEach(s=>{
+    el.innerHTML+=`<div class="skill-row">
+      <div class="skill-meta"><span class="skill-name">${s.n}</span><span class="skill-pct">${s.p}%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="${s.p}" style="background:${color}"></div></div>
+    </div>`;
+  });
+}
+renderSkills('skills-back',backSkills,colors.back);
+renderSkills('skills-front',frontSkills,colors.front);
+renderSkills('skills-core',coreSkills,colors.core);
+
+const tg=document.getElementById('tools-grid');
+tools.forEach(t=>{ tg.innerHTML+=`<span class="tool-badge">${t}</span>`; });
+
+// Reveal on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      document.querySelectorAll('.skill-fill').forEach(b=>{ b.style.width=b.dataset.pct+'%'; });
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
